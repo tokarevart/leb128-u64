@@ -33,9 +33,15 @@ pub fn decode(mut buf: impl Buf) -> u64 {
     panic!("encoded integer doesn't fit in u64");
 }
 
+pub fn encoded_len(value: u64) -> usize {
+    // Based on [VarintSize64][1].
+    // [1]: https://github.com/google/protobuf/blob/3.3.x/src/google/protobuf/io/coded_stream.h#L1301-L1309
+    (((value | 0x1).ilog2() * 9 + 73) / 64) as _
+}
+
 #[cfg(test)]
 mod tests {
-    use super::{decode, encode};
+    use super::*;
     use proptest::{prelude::any, prop_assert_eq, proptest};
 
     #[test]
@@ -63,8 +69,10 @@ mod tests {
     proptest! {
         #[test]
         fn random(input in any::<u64>()) {
-            let mut buf = [0u8; 10];
-            encode(input, &mut buf[..]);
+            let mut buf = Vec::new();
+            encode(input, &mut buf);
+            prop_assert_eq!(encoded_len(input), buf.len());
+
             let output = decode(&buf[..]);
             prop_assert_eq!(input, output);
         }

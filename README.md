@@ -10,8 +10,9 @@ Extremely minimal and simple [LEB128](https://en.wikipedia.org/wiki/LEB128) `u64
 
 ```rust
 let input: u64 = 42;
-let mut buf = [0u8; 10];
-leb128_u64::encode(input, &mut buf[..]);
+let mut buf = Vec::new();
+leb128_u64::encode(input, &mut buf);
+assert_eq!(leb128_u64::encoded_len(input), buf.len());
 
 let output = leb128_u64::decode(&buf[..]);
 assert_eq!(input, output);
