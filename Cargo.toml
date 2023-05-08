@@ -1,0 +1,17 @@
+[package]
+name = "leb128-u64"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+authors = ["Artem Tokarev <tokarev28.art@gmail.com>"]
+keywords = ["encoding", "leb128", "no_std"]
+categories = ["encoding", "no-std"]
+description = "Extremely minimal and simple LEB128 u64 encoding/decoding"
+repository = "https://github.com/tokarevart/leb128-u64"
+readme = "README.md"
+
+[dependencies]
+bytes = { version = "1.4", default-features = false }
+
+[dev-dependencies]
+proptest = "1.1"
